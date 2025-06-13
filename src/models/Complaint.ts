@@ -14,7 +14,12 @@ const complaintSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['submitted', 'assigned', 'in-progress', 'resolved'],
-        default: 'open'
+        default: 'submitted'
+    },
+    type: {
+        type: String,
+        required: true,
+        trim: true
     },
     complaintNumber: {
         type: String,
@@ -22,15 +27,14 @@ const complaintSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
-    picture: {
+    image: {
         type: String
     },
     qrCode: {
         type: String
     },
     createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Resident',
+        type: String,
         required: true
     },
 
@@ -42,7 +46,8 @@ const complaintSchema = new mongoose.Schema({
     },
     assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Worker'
+        ref: 'Worker',
+        default: null
     }
 
 }, {timestamps: true});

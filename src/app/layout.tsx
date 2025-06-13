@@ -4,7 +4,6 @@ import {Toaster} from 'react-hot-toast'
 import "./globals.css";
 import Header from "../components/ui/Header"
 import Footer from "../components/ui/Footer"
-import getUserFromToken from "@/lib/auth";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",

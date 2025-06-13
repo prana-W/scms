@@ -13,7 +13,8 @@ async function getUserFromToken() {
     } catch {
         return {
             name: 'Unauthorized',
-            role: 'guest'
+            role: 'guest',
+            _id: 0
         }
     }
 }
