@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {useEffect, useState} from 'react';
 import { LogOut, Menu, X } from 'lucide-react';
+import toast from 'react-hot-toast'
 
 interface User {
     name: string;
@@ -46,13 +47,14 @@ const Header = () => {
         try {
             const response = await fetch('/api/auth/logout', { method: 'POST' });
             if (response.ok) {
+                toast.success('Logged out successfully');
                 router.push('/login');
                 router.refresh();
             } else {
-                console.error('Logout failed');
+                toast.error('Logout failed!');
             }
         } catch (error) {
-            console.error('Logout error:', error);
+            toast.error('Logout failed!');
         }
         setIsMobileMenuOpen(false);
     };
@@ -66,7 +68,7 @@ const Header = () => {
                             SCMS
                         </Link>
                         {isAuthorized && (
-                            <span className="hidden sm:inline text-gray-300">Hello, {user.name}</span>
+                            <span className="hidden sm:inline text-gray-300">Hello, {user.name}!</span>
                         )}
                     </div>
 

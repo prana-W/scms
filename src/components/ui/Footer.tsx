@@ -119,7 +119,7 @@ const Footer = () => {
                 <div className="mt-8 pt-8 border-t border-slate-700">
                     <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
                         <div className="text-sm text-slate-400">
-                            © {new Date().getFullYear()} ResidentHub. All rights reserved.
+                            © {new Date().getFullYear()} SCMS. All rights reserved.
                         </div>
                         <div className="text-sm bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-medium">
                             Made with ❤️ by W.

@@ -35,7 +35,7 @@ export default async function RootLayout({
          {/*@ts-ignore*/}
         <Header />
         <main className="flex-grow">{children}</main>
-        <Toaster position="top-right" reverseOrder={false}/>
+        <Toaster position="bottom-right" reverseOrder={false}/>
         <Footer/>
         </body>
         </html>
