@@ -9,7 +9,10 @@ async function getUserFromToken() {
         const user = jwt.verify(token, process.env.JWT_SECRET)
         return user
     } catch {
-        return null
+        return {
+            name: 'Unauthorized',
+            role: 'guest'
+        }
     }
 }
 

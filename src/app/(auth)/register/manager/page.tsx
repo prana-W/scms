@@ -6,6 +6,7 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {z} from 'zod'
 import {useRouter} from 'next/navigation'
 import {Building, Mail, Phone, Lock, Eye, EyeOff, IdCard, User} from 'lucide-react'
+import toast from 'react-hot-toast'
 
 const managerSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -55,14 +56,13 @@ export default function ManagerRegisterPage() {
             const result = await response.json()
 
             if (response.ok) {
-                alert('Registration successful! Please login to continue.')
+                toast.success('Registration successful! Please login to continue.')
                 router.push('/login')
             } else {
                 throw new Error(result.message || 'Registration failed')
             }
         } catch (error) {
-            console.error('Registration failed:', error)
-            alert(error instanceof Error ? error.message : 'Registration failed. Please try again.')
+            toast.error(error instanceof Error ? error.message : 'Registration failed. Please try again.')
         } finally {
             setIsLoading(false)
         }

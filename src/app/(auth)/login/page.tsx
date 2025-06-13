@@ -1,6 +1,7 @@
 "use client";
 
 import React, {useState} from 'react';
+import toast from "react-hot-toast"
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
@@ -67,12 +68,11 @@ const MultiRoleLogin = () => {
             if (!response.ok) throw new Error('Login failed');
 
             const result = await response.json();
-            alert(`Login successful as ${data.role}`);
-            console.log(result)
+            toast.success(`Login successful as ${data.role}`);
             router.push('/')
         } catch (error) {
             console.error(error);
-            alert('Login failed. Please check credentials.');
+            toast.error('Login failed. Please check credentials.');
         } finally {
             setIsLoading(false);
         }
