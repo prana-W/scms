@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import getUserFromToken from "@/lib/auth";
 
 export default async function HomePage() {
