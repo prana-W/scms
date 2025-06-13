@@ -37,7 +37,7 @@ const ContactPage = () => {
                         <Twitter size={28} />
                     </a>
                     <a
-                        href="https://linkedin.com/in/pranaw-kumar"
+                        href="https://linkedin.com/in/pranaw-kumar-710331215"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-700 hover:text-orange-600"
