@@ -4,6 +4,7 @@ import {Toaster} from 'react-hot-toast'
 import "./globals.css";
 import Header from "../components/ui/Header"
 import Footer from "../components/ui/Footer"
+import getUserFromToken from "@/lib/auth";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -20,17 +21,19 @@ export const metadata: Metadata = {
     description: "Society Complaint Management System. Crafted by W."
 };
 
-export default function RootLayout({
+export default async function RootLayout({
                                        children,
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+
     return (
         <html lang="en">
         <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
         >
-        <Header/>
+         {/*@ts-ignore*/}
+        <Header />
         <main className="flex-grow">{children}</main>
         <Toaster position="top-right" reverseOrder={false}/>
         <Footer/>

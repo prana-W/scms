@@ -70,6 +70,7 @@ const MultiRoleLogin = () => {
             const result = await response.json();
             toast.success(`Login successful as ${data.role}`);
             router.push('/')
+            router.refresh();
         } catch (error) {
             console.error(error);
             toast.error('Login failed. Please check credentials.');
