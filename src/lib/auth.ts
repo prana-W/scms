@@ -1,0 +1,16 @@
+import {cookies} from 'next/headers'
+import jwt from 'jsonwebtoken'
+
+async function getUserFromToken() {
+    const token = (await cookies()).get('token')?.value
+    if (!token) return null
+    try {
+        // @ts-ignore
+        const user = jwt.verify(token, process.env.JWT_SECRET)
+        return user
+    } catch {
+        return null
+    }
+}
+
+export default getUserFromToken

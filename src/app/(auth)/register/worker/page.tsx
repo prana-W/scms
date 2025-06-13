@@ -97,7 +97,6 @@ export default function WorkerRegisterPage() {
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                    {/* Name */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Full Name

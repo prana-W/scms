@@ -12,7 +12,7 @@ const managerSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
-    phoneNumber: {
+    phone: {
         type: String,
         required: true,
         unique: true,
@@ -30,6 +30,6 @@ const managerSchema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
-const Manager = mongoose.model('Manager', managerSchema);
+const Manager = mongoose.models.Manager || mongoose.model('Manager', managerSchema);
 
 export default Manager;

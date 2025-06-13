@@ -48,6 +48,6 @@ const complaintSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 
-const Complaint = mongoose.model('Complaint', complaintSchema);
+const Complaint = mongoose.models.Complaint || mongoose.model('Complaint', complaintSchema);
 
 export default Complaint;

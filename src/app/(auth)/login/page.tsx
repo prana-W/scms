@@ -4,6 +4,7 @@ import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
+import {useRouter} from 'next/navigation'
 import {Phone, User, Shield, Briefcase, Eye, EyeOff} from 'lucide-react';
 
 const loginSchema = z.object({
@@ -18,6 +19,9 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const MultiRoleLogin = () => {
+
+    const router = useRouter()
+
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -54,7 +58,7 @@ const MultiRoleLogin = () => {
     const handleLogin = async (data: LoginFormData) => {
         setIsLoading(true);
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data),
@@ -64,7 +68,8 @@ const MultiRoleLogin = () => {
 
             const result = await response.json();
             alert(`Login successful as ${data.role}`);
-            // redirect to dashboard here
+            console.log(result)
+            router.push('/')
         } catch (error) {
             console.error(error);
             alert('Login failed. Please check credentials.');

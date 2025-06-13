@@ -12,7 +12,7 @@ const residentSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
-    phoneNumber: {
+    phone: {
         type: String,
         required: true,
         unique: true,
@@ -39,6 +39,6 @@ const residentSchema = new mongoose.Schema({
     }
 }, {timestamps: true})
 
-const Resident = mongoose.model('Resident', residentSchema);
+const Resident = mongoose.models.Resident || mongoose.model('Resident', residentSchema);
 
 export default Resident;

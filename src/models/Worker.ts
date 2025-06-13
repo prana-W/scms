@@ -6,7 +6,7 @@ const workerSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    phoneNumber: {
+    phone: {
         type: String,
         required: true,
         unique: true,
@@ -40,6 +40,6 @@ const workerSchema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
-const Worker = mongoose.model('Worker', workerSchema);
+const Worker = mongoose.models.Worker || mongoose.model('Worker', workerSchema);
 
 export default Worker;

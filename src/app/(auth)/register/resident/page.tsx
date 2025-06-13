@@ -42,7 +42,6 @@ export default function ResidentRegisterPage() {
         try {
             const {confirmPassword, ...residentData} = data
 
-            // todo
             const response = await fetch('/api/auth/register/resident', {
                 method: 'POST',
                 headers: {
