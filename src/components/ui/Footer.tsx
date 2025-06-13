@@ -1,4 +1,3 @@
-// components/ui/Footer.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -79,7 +78,6 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Important Links Section */}
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Important Links</h3>
                         <ul className="space-y-3">
@@ -96,7 +94,6 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Social Media Section */}
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Follow Us</h3>
                         <div className="flex flex-wrap gap-4">
@@ -119,14 +116,13 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
                 <div className="mt-8 pt-8 border-t border-slate-700">
                     <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
                         <div className="text-sm text-slate-400">
                             © {new Date().getFullYear()} ResidentHub. All rights reserved.
                         </div>
                         <div className="text-sm bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-medium">
-                            Made with ❤️ for our community
+                            Made with ❤️ by W.
                         </div>
                     </div>
                 </div>
