@@ -7,8 +7,8 @@ async function getUserFromToken() {
     const token = (await cookies()).get('token')?.value
     if (!token) return null
     try {
-        // @ts-ignore
-        const user = jwt.verify(token, process.env.JWT_SECRET)
+
+        const user = jwt.verify(token, process.env.JWT_SECRET!)
         return user
     } catch {
         return {
