@@ -162,7 +162,7 @@ const Header = () => {
                                         Login
                                     </Link>
                                     <Link
-                                        href="/signup"
+                                        href="/register"
                                         className="block mx-4 my-2 px-4 py-2 bg-orange-600 text-white text-center rounded-md hover:bg-orange-700 transition-colors"
                                         onClick={() => setIsMobileMenuOpen(false)}
                                     >
