@@ -58,7 +58,7 @@ const RaiseComplaintPage = () => {
             toast.dismiss();
             toast.success('Complaint submitted!');
             reset();
-            router.push('/dashboard');
+            router.push('/');
         } catch (err) {
             toast.dismiss();
             toast.error('Failed to submit complaint');

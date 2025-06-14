@@ -24,7 +24,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
 
         const updatedComplaint = await Complaint.findByIdAndUpdate(
             complaintId,
-            { assignedTo: worker._id, priority },
+            { assignedTo: worker._id, priority, status: 'assigned' },
             { new: true }
         )
 

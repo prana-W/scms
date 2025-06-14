@@ -139,6 +139,7 @@ export default function ComplaintPage({params}: Props) {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     assignedTo: complaint?.assignedTo,
+                    status: 'assigned',
                     priority: complaint?.priority,
                 }),
             })
@@ -150,29 +151,9 @@ export default function ComplaintPage({params}: Props) {
             const updatedRes = await fetch(`/api/complaint/${complaintId}`)
             const updatedData = await updatedRes.json()
             setComplaint(updatedData)
+            router.push('/complaint')
         } catch (err: any) {
             toast.error('Unable to assign complaint!')
-        }
-    }
-
-    // Accept complaint handler for workers
-    const handleWorkerAccept = async () => {
-        try {
-            const res = await fetch(`/api/complaint/${complaintId}/accept`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({workerId: userId}),
-            })
-
-            if (!res.ok) throw new Error('Failed to accept complaint')
-            alert('Complaint accepted!')
-
-            // Refresh complaint data
-            const updatedRes = await fetch(`/api/complaint/${complaintId}`)
-            const updatedData = await updatedRes.json()
-            setComplaint(updatedData)
-        } catch (err: any) {
-            alert(err.message)
         }
     }
 
@@ -239,7 +220,7 @@ export default function ComplaintPage({params}: Props) {
             <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="mb-6">
                     <h1 className="text-2xl font-bold mb-2">
-                        Complaint #{complaint?.complaintNumber}
+                        Complaint: {complaint?.complaintNumber}
                     </h1>
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                         <span>Created By: {complaint?.createdBy?.name}</span>
@@ -387,10 +368,12 @@ export default function ComplaintPage({params}: Props) {
                             <div className="space-y-3">
                                 {complaint?.status === 'assigned' && complaint?.assignedTo === userId && (
                                     <button
-                                        onClick={handleWorkerAccept}
+                                        onClick={() => {
+                                            router.push('/scanner')
+                                        }}
                                         className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                                     >
-                                        Accept Complaint
+                                        Scan QR-code
                                     </button>
                                 )}
 
