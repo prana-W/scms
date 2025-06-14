@@ -517,7 +517,7 @@ const ComplaintPage = () => {
 
                                     <div className="ml-4 flex-shrink-0">
                                         <button
-                                            onClick={() => router.push(`/complaints/${complaint._id}`)}
+                                            onClick={() => router.push(`/complaint/${complaint._id}`)}
                                             className="text-blue-600 hover:text-blue-800 font-medium text-sm"
                                         >
                                             View Details
