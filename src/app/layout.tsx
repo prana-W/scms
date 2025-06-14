@@ -4,6 +4,7 @@ import {Toaster} from 'react-hot-toast'
 import "./globals.css";
 import Header from "../components/ui/Header"
 import Footer from "../components/ui/Footer"
+import {Analytics} from "@vercel/analytics/next"
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -24,8 +25,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-                                       children,
-                                   }: Readonly<{
+                                             children,
+                                         }: Readonly<{
     children: React.ReactNode;
 }>) {
 
@@ -34,11 +35,12 @@ export default async function RootLayout({
         <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
         >
-         {/*@ts-ignore*/}
-        <Header />
+        {/*@ts-ignore*/}
+        <Header/>
         <main className="flex-grow">{children}</main>
         <Toaster position="bottom-right" reverseOrder={false}/>
         <Footer/>
+        <Analytics/>
         </body>
         </html>
     );

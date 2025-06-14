@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {useEffect, useState} from 'react';
 import { LogOut, Menu, X } from 'lucide-react';
 import toast from 'react-hot-toast'
+import { ArrowLeft } from 'lucide-react';
 
 interface User {
     name: string;
@@ -35,8 +36,8 @@ const Header = () => {
     const navLinks = [
         { href: '/', label: 'Dashboard' },
         { href: '/complaint', label: 'Complaint' },
-        { href: '/contact', label: 'Contact' },
         { href: '/about', label: 'About' },
+        { href: '/contact', label: 'Contact' }
     ];
 
     const isActive = (href: string) => pathname === href;
@@ -64,10 +65,20 @@ const Header = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     <div className="flex items-center space-x-4">
+                        <button
+                            onClick={() => router.back()}
+                            className="mr-2 p-2 text-gray-300 hover:text-orange-400 hover:bg-gray-800 rounded-md"
+                            aria-label="Go Back"
+                            title="Go Back"
+                        >
+                            <ArrowLeft size={20} />
+                        </button>
                         <Link href="/" className="text-xl font-bold text-orange-500">
                             SCMS
                         </Link>
                     </div>
+
+
 
                     <nav className="hidden md:flex flex-1 justify-center items-center space-x-8">
                         {isAuthorized

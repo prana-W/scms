@@ -339,7 +339,7 @@ const ComplaintPage = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">{getPageTitle()}</h1>
+                    <h1 className="text-3xl font-bold text-orange-600">{getPageTitle()}</h1>
                     <p className="mt-2 text-gray-600">
                         {user?.role === 'manager' && `Viewing all complaints in the system`}
                         {user?.role === 'resident' && `Your submitted complaints`}

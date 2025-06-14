@@ -216,7 +216,7 @@ export default function ComplaintPage({params}: Props) {
             })
 
             if (!res.ok) throw new Error('Failed to delete complaint')
-            toast.success('Complaint deleted!')
+            toast.success('Complaint was marked as resolved!')
             router.push('/complaint')
         } catch (err: any) {
             toast.error("Unable to delete complaint!")

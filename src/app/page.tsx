@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState, useEffect, use, useMemo, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import {
     User,
@@ -81,10 +81,8 @@ const Dashboard: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [userData, setUserData] = useState<UserData | null>(null);
 
-    // Function to parse JWT token from cookies
     const parseJWTFromCookie = (): JWTPayload | null => {
         try {
-            // Get all cookies
             const cookies = document.cookie.split(';').reduce((acc: Record<string, string>, cookie) => {
                 const [key, value] = cookie.trim().split('=');
                 if (key && value) {
@@ -93,18 +91,14 @@ const Dashboard: React.FC = () => {
                 return acc;
             }, {});
 
-            // Look for common JWT cookie names
             const token = cookies.token || cookies.authToken || cookies.jwt || cookies.accessToken;
 
             if (!token) {
                 setLoading(false)
                 return null;
             }
-
-            // Parse JWT payload (basic parsing without verification)
             const payload = JSON.parse(atob(token.split('.')[1])) as JWTPayload;
 
-            // Check if token is expired
             if (payload.exp && Date.now() >= payload.exp * 1000) {
                 return null;
             }
@@ -201,8 +195,6 @@ const Dashboard: React.FC = () => {
         callData();
     }, [user]);
 
-
-
     const ProfileCard: React.FC<ProfileCardProps> = ({children, title}) => (
         <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
@@ -280,7 +272,6 @@ const Dashboard: React.FC = () => {
         </div>
     );
 
-    // Landing page for non-authenticated users
     const LandingPage: React.FC = () => (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
             <div className="container mx-auto px-4 py-12">
