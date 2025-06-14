@@ -5,8 +5,6 @@ import getUserFromToken from '@/lib/auth';
 
 export async function POST(req: Request) {
 
-    const currentUser = await getUserFromToken();
-
     try {
 
         await connectDB();
@@ -22,7 +20,6 @@ export async function POST(req: Request) {
 
         return NextResponse.json(complaint);
     } catch (error) {
-        console.log(error)
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
