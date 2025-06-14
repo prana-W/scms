@@ -96,7 +96,10 @@ const Dashboard: React.FC = () => {
             // Look for common JWT cookie names
             const token = cookies.token || cookies.authToken || cookies.jwt || cookies.accessToken;
 
-            if (!token) return null;
+            if (!token) {
+                setLoading(false)
+                return null;
+            }
 
             // Parse JWT payload (basic parsing without verification)
             const payload = JSON.parse(atob(token.split('.')[1])) as JWTPayload;
@@ -178,8 +181,6 @@ const Dashboard: React.FC = () => {
     useEffect(() => {
         const userData = parseJWTFromCookie();
         setUser(userData);
-        setLoading(false);
-
     }, []);
 
     useEffect(() => {
@@ -189,8 +190,11 @@ const Dashboard: React.FC = () => {
             try {
                 const getData = await getUserData(user.role, user._id);
                 setUserData(getData);
+
             } catch (err) {
                 console.error("Failed to fetch user data:", err);
+            } finally {
+                setLoading(false);
             }
         };
 
