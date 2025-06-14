@@ -47,7 +47,8 @@ const complaintSchema = new mongoose.Schema({
     assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Worker',
-        default: null
+        default: null,
+        unique: true
     }
 
 }, {timestamps: true});

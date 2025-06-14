@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import {useRouter} from 'next/navigation'
 import {use, useEffect, useState} from 'react'
 import toast from "react-hot-toast";
 
@@ -37,7 +37,7 @@ interface Props {
 
 
 const fetchUser = async () => {
-    const res = await fetch('/api/auth/user', { credentials: 'include' })
+    const res = await fetch('/api/auth/user', {credentials: 'include'})
     const data = await res.json()
     return data.user
 }
@@ -61,7 +61,7 @@ const getCurrentUserId = async (): Promise<string> => {
 }
 
 
-export default function ComplaintPage({ params }: Props) {
+export default function ComplaintPage({params}: Props) {
     const router = useRouter()
     const [complaint, setComplaint] = useState<Complaint | null>(null)
     const [workers, setWorkers] = useState<Worker[]>([])
@@ -114,7 +114,7 @@ export default function ComplaintPage({ params }: Props) {
         try {
             const res = await fetch(`/api/complaint/${complaintId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     title: complaint?.title,
                     description: complaint?.description,
@@ -136,7 +136,7 @@ export default function ComplaintPage({ params }: Props) {
         try {
             const res = await fetch(`/api/complaint/${complaintId}/assign`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     assignedTo: complaint?.assignedTo,
                     priority: complaint?.priority,
@@ -160,8 +160,8 @@ export default function ComplaintPage({ params }: Props) {
         try {
             const res = await fetch(`/api/complaint/${complaintId}/accept`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ workerId: userId }),
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({workerId: userId}),
             })
 
             if (!res.ok) throw new Error('Failed to accept complaint')
@@ -186,7 +186,7 @@ export default function ComplaintPage({ params }: Props) {
         try {
             const res = await fetch(`/api/complaint/${complaintId}/resolve`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     qrCode: qrCodeInput,
                     workerId: userId
@@ -226,7 +226,7 @@ export default function ComplaintPage({ params }: Props) {
 
     // Controlled input change
     const handleChange = (field: keyof Complaint, value: string) => {
-        if (complaint) setComplaint({ ...complaint, [field]: value })
+        if (complaint) setComplaint({...complaint, [field]: value})
     }
 
     if (loading) return <div className="p-6">Loading...</div>
@@ -256,6 +256,12 @@ export default function ComplaintPage({ params }: Props) {
                             alt="Complaint"
                             className="max-w-md rounded-lg shadow-sm"
                         />
+                    </div>
+                )}
+                {complaint?.qrCode && userRole === 'resident' && (
+                    <div className="mt-4">
+                        <h3 className="font-semibold">QR Code:</h3>
+                        <img src={complaint.qrCode} alt="QR Code" className="w-48 h-48"/>
                     </div>
                 )}
 
@@ -300,7 +306,7 @@ export default function ComplaintPage({ params }: Props) {
                         <div>
                             <label className="block text-sm font-medium mb-1">Type</label>
 
-                                <p className="p-2 bg-gray-50 rounded">{complaint?.type}</p>
+                            <p className="p-2 bg-gray-50 rounded">{complaint?.type}</p>
 
                         </div>
 
@@ -310,15 +316,6 @@ export default function ComplaintPage({ params }: Props) {
                             <p className="p-2 bg-gray-50 rounded">{complaint?.assignedTo || 'Not assigned'}</p>
                         </div>
 
-                        {/* QR Code - Only resident can see */}
-                        {userRole === 'resident' && complaint?.qrCode && (
-                            <div>
-                                <label className="block text-sm font-medium mb-1">QR Code</label>
-                                <p className="p-2 bg-yellow-50 rounded font-mono text-sm border border-yellow-200">
-                                    {complaint.qrCode}
-                                </p>
-                            </div>
-                        )}
                     </div>
 
                     {/* Right Column - Role-specific Actions */}
@@ -399,7 +396,8 @@ export default function ComplaintPage({ params }: Props) {
 
                                 {complaint?.status === 'in-progress' && complaint?.assignedTo === userId && (
                                     <div className="space-y-2">
-                                        <label className="block text-sm font-medium">QR Code / Confirmation String</label>
+                                        <label className="block text-sm font-medium">QR Code / Confirmation
+                                            String</label>
                                         <input
                                             type="text"
                                             value={qrCodeInput}

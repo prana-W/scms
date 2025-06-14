@@ -26,6 +26,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.514.0",
     "mongoose": "^8.15.2",
+    "nanoid": "^5.1.5",
     "next": "15.3.3",
     "next-auth": "^5.0.0-beta.23",
     "qrcode": "^1.5.4",
@@ -33,6 +34,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.57.0",
     "react-hot-toast": "^2.5.2",
+    "react-qr-reader": "^3.0.0-beta-1",
     "zod": "^3.25.64"
   },
   "devDependencies": {

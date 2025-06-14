@@ -2,23 +2,25 @@ import { NextResponse } from 'next/server';
 import Complaint from '@/models/Complaint';
 import connectDB from '@/lib/mongodb';
 import getUserFromToken from "@/lib/auth";
+import QRCode from 'qrcode'
+import {nanoid} from 'nanoid';
 
 export async function POST(req: Request) {
 
-    const currentUser = await getUserFromToken()
-
     try {
-
+        const currentUser = await getUserFromToken()
         await connectDB();
         const body = await req.json();
+        const complaintNumber = nanoid(10);
+        const qrCodeDataURL = await QRCode.toDataURL(complaintNumber)
 
         const complaint = await Complaint.create({
             ...body,
             // @ts-ignore
             createdBy: currentUser._id,
             // @ts-ignore
-            complaintNumber: `C${currentUser._id}${Date.now()}`,
-            qrCode: Date.now()
+            complaintNumber,
+            qrCode: qrCodeDataURL
         });
 
         return NextResponse.json(complaint);
