@@ -26,6 +26,12 @@ export function middleware(req: NextRequest) {
             return NextResponse.redirect(unauthorizedUrl)
         }
 
+        if (pathname.startsWith('/scanner') && decoded.role !== 'worker') {
+            const unauthorizedUrl = new URL('/unauthorized', req.url)
+            unauthorizedUrl.searchParams.set('message', 'Only workers can access this page.')
+            return NextResponse.redirect(unauthorizedUrl)
+        }
+
         return NextResponse.next()
     } catch (err) {
         console.error('JWT Decode Error:', err)
@@ -43,5 +49,6 @@ export const config = {
         '/admin/:path*',
         '/raise-complaint',
         '/dashboard/:path*',
+        '/scanner'
     ],
 }
