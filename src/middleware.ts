@@ -11,11 +11,9 @@ export function middleware(req: NextRequest) {
             return NextResponse.redirect(loginUrl)
         }
 
-        // 🔓 Decode JWT without verification
         const base64Payload = token.split('.')[1]
         const decoded = JSON.parse(Buffer.from(base64Payload, 'base64').toString('utf-8')) as { role: string }
 
-        // 🔐 Basic role check (not secure, but useful for UX gating)
         if (pathname.startsWith('/admin') && decoded.role !== 'admin') {
             const unauthorizedUrl = new URL('/unauthorized', req.url)
             unauthorizedUrl.searchParams.set('message', 'Only admins can access this page.')

@@ -15,7 +15,8 @@ export async function POST(req: Request) {
             // @ts-ignore
             createdBy: currentUser._id,
             // @ts-ignore
-            complaintNumber: `C${currentUser._id}${Date.now()}`
+            complaintNumber: `C${currentUser._id}${Date.now()}`,
+            qrCode: Date.now()
         });
 
         return NextResponse.json(complaint);
