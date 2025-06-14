@@ -17,7 +17,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: "SCMS",
-    description: "Society Complaint Management System. Crafted by W."
+    description: "Society Complaint Management System. Crafted by W.",
+    icons: {
+        icon: "/favicon.png"
+    },
 };
 
 export default async function RootLayout({

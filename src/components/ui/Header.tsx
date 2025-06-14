@@ -33,7 +33,7 @@ const Header = () => {
 
     const isAuthorized = user;
     const navLinks = [
-        { href: '/dashboard', label: 'Dashboard' },
+        { href: '/', label: 'Dashboard' },
         { href: '/complaint', label: 'Complaint' },
         { href: '/contact', label: 'Contact' },
         { href: '/about', label: 'About' },
@@ -67,9 +67,6 @@ const Header = () => {
                         <Link href="/" className="text-xl font-bold text-orange-500">
                             SCMS
                         </Link>
-                        {isAuthorized && (
-                            <span className="hidden sm:inline text-gray-300">Hello, {user.name}!</span>
-                        )}
                     </div>
 
                     <nav className="hidden md:flex flex-1 justify-center items-center space-x-8">
