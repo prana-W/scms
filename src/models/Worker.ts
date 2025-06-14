@@ -26,10 +26,6 @@ const workerSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    rating: {
-        type: Number,
-        default: 4.0
-    },
     role: {
         type: String,
         required: true,
