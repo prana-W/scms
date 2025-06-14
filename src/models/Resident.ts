@@ -32,10 +32,6 @@ const residentSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    },
-    complaints: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Complaint'
     }
 }, {timestamps: true})
 

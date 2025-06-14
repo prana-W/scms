@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import {useState, useEffect} from 'react';
+import {useRouter} from 'next/navigation';
 
 // Types
 interface User {
@@ -18,22 +18,23 @@ interface Complaint {
     status: 'pending' | 'in-progress' | 'resolved' | 'rejected';
     priority: 'low' | 'medium' | 'high';
     type: string;
-    createdBy: {
-        _id: string;
-        name: string;
-        email: string;
-    };
-    assignedTo?: {
-        _id: string;
-        name: string;
-        email: string;
-    };
+    createdBy: string;
+    assignedTo?: string;
     createdAt: string;
     updatedAt: string;
 }
 
 // Filter types
-type FilterType = 'all' | 'recent' | 'open' | 'pending' | 'in-progress' | 'resolved' | 'high-priority' | 'assigned' | 'unassigned';
+type FilterType =
+    'all'
+    | 'recent'
+    | 'open'
+    | 'pending'
+    | 'in-progress'
+    | 'resolved'
+    | 'high-priority'
+    | 'assigned'
+    | 'unassigned';
 type SortType = 'newest' | 'oldest' | 'priority' | 'status';
 
 const ComplaintPage = () => {
@@ -66,7 +67,6 @@ const ComplaintPage = () => {
     const getUserFromToken = () => {
         try {
             const token = getCookie('token')
-            console.log(token)
             if (!token) {
                 router.push('/login');
                 return null;
@@ -74,7 +74,7 @@ const ComplaintPage = () => {
 
             // Decode JWT token (simple base64 decode for payload)
             const payload = JSON.parse(atob(token.split('.')[1]));
-            return payload.user;
+            return payload;
         } catch (error) {
             console.error('Error decoding token:', error);
             router.push('/login');
@@ -86,7 +86,7 @@ const ComplaintPage = () => {
     const fetchComplaints = async (userRole: string, userId: string) => {
         try {
             const token = getCookie('token');
-            const response = await fetch('/api/complaints', {
+            const response = await fetch('/api/complaint', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -109,13 +109,13 @@ const ComplaintPage = () => {
                 case 'resident':
                     // Resident gets only their complaints
                     filteredComplaints = data.complaints.filter(
-                        (complaint: Complaint) => complaint.createdBy._id === userId
+                        (complaint: Complaint) => complaint.createdBy === userId
                     );
                     break;
                 case 'worker':
                     // Worker gets complaints assigned to them
                     filteredComplaints = data.complaints.filter(
-                        (complaint: Complaint) => complaint.assignedTo?._id === userId
+                        (complaint: Complaint) => complaint?.assignedTo === userId
                     );
                     break;
                 default:
@@ -198,11 +198,11 @@ const ComplaintPage = () => {
                 filtered.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
                 break;
             case 'priority':
-                const priorityOrder = { high: 3, medium: 2, low: 1 };
+                const priorityOrder = {high: 3, medium: 2, low: 1};
                 filtered.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
                 break;
             case 'status':
-                const statusOrder = { pending: 4, 'in-progress': 3, resolved: 2, rejected: 1 };
+                const statusOrder = {pending: 4, 'in-progress': 3, resolved: 2, rejected: 1};
                 filtered.sort((a, b) => statusOrder[b.status] - statusOrder[a.status]);
                 break;
             default:
@@ -215,24 +215,50 @@ const ComplaintPage = () => {
     // Get available filters based on user role
     const getAvailableFilters = (): { key: FilterType; label: string; count?: number }[] => {
         const baseFilters = [
-            { key: 'all' as FilterType, label: 'All', count: complaints.length },
-            { key: 'recent' as FilterType, label: 'Recent (7 days)', count: complaints.filter(c => {
+            {key: 'all' as FilterType, label: 'All', count: complaints.length},
+            {
+                key: 'recent' as FilterType, label: 'Recent (7 days)', count: complaints.filter(c => {
                     const sevenDaysAgo = new Date();
                     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
                     return new Date(c.createdAt) >= sevenDaysAgo;
-                }).length },
-            { key: 'open' as FilterType, label: 'Open', count: complaints.filter(c => c.status === 'pending' || c.status === 'in-progress').length },
-            { key: 'pending' as FilterType, label: 'Pending', count: complaints.filter(c => c.status === 'pending').length },
-            { key: 'in-progress' as FilterType, label: 'In Progress', count: complaints.filter(c => c.status === 'in-progress').length },
-            { key: 'resolved' as FilterType, label: 'Resolved', count: complaints.filter(c => c.status === 'resolved').length },
-            { key: 'high-priority' as FilterType, label: 'High Priority', count: complaints.filter(c => c.priority === 'high').length },
+                }).length
+            },
+            {
+                key: 'open' as FilterType,
+                label: 'Open',
+                count: complaints.filter(c => c.status === 'pending' || c.status === 'in-progress').length
+            },
+            {
+                key: 'pending' as FilterType,
+                label: 'Pending',
+                count: complaints.filter(c => c.status === 'pending').length
+            },
+            {
+                key: 'in-progress' as FilterType,
+                label: 'In Progress',
+                count: complaints.filter(c => c.status === 'in-progress').length
+            },
+            {
+                key: 'resolved' as FilterType,
+                label: 'Resolved',
+                count: complaints.filter(c => c.status === 'resolved').length
+            },
+            {
+                key: 'high-priority' as FilterType,
+                label: 'High Priority',
+                count: complaints.filter(c => c.priority === 'high').length
+            },
         ];
 
         // Add role-specific filters
         if (user?.role === 'manager') {
             baseFilters.push(
-                { key: 'assigned' as FilterType, label: 'Assigned', count: complaints.filter(c => c.assignedTo).length },
-                { key: 'unassigned' as FilterType, label: 'Unassigned', count: complaints.filter(c => !c.assignedTo).length }
+                {key: 'assigned' as FilterType, label: 'Assigned', count: complaints.filter(c => c.assignedTo).length},
+                {
+                    key: 'unassigned' as FilterType,
+                    label: 'Unassigned',
+                    count: complaints.filter(c => !c.assignedTo).length
+                }
             );
         }
 
@@ -327,13 +353,14 @@ const ComplaintPage = () => {
                         {user?.role === 'resident' && `Your submitted complaints`}
                         {user?.role === 'worker' && `Complaints assigned to you`}
                     </p>
-                    <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                    <div
+                        className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <span className="text-sm text-gray-500">
               Showing {filteredComplaints.length} of {complaints.length} complaint{complaints.length !== 1 ? 's' : ''}
             </span>
                         {user?.role === 'resident' && (
                             <button
-                                onClick={() => router.push('/complaints/new')}
+                                onClick={() => router.push('/raise-complaint')}
                                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors w-full sm:w-auto"
                             >
                                 New Complaint
@@ -354,8 +381,10 @@ const ComplaintPage = () => {
                             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                         </div>
                     </div>
@@ -462,21 +491,26 @@ const ComplaintPage = () => {
                                                 <span className="font-medium">Category:</span> {complaint.type}
                                             </div>
                                             <div>
-                                                <span className="font-medium">Created by:</span> {complaint.createdBy.name}
+                                                <span
+                                                    className="font-medium">Created by:</span> {complaint.createdBy.name}
                                             </div>
                                             {complaint.assignedTo && (
                                                 <div>
-                                                    <span className="font-medium">Assigned to:</span> {complaint.assignedTo.name}
+                                                    <span
+                                                        className="font-medium">Assigned to:</span> {complaint.assignedTo.name}
                                                 </div>
                                             )}
                                         </div>
 
-                                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                                        <div
+                                            className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                                             <div className="text-sm text-gray-500">
-                                                <span className="font-medium">Created:</span> {formatDate(complaint.createdAt)}
+                                                <span
+                                                    className="font-medium">Created:</span> {formatDate(complaint.createdAt)}
                                             </div>
                                             <div className="text-sm text-gray-500">
-                                                <span className="font-medium">Updated:</span> {formatDate(complaint.updatedAt)}
+                                                <span
+                                                    className="font-medium">Updated:</span> {formatDate(complaint.updatedAt)}
                                             </div>
                                         </div>
                                     </div>

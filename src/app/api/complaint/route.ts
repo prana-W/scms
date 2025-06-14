@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import cloudinary from '@/lib/cloudinary';
-import connectDB  from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import Complaint from '@/models/Complaint';
 import Worker from '../../../models/Worker'
 import jwt from 'jsonwebtoken';
@@ -13,6 +13,13 @@ interface JWTPayload {
         name: string;
         email: string;
     };
+}
+
+interface User {
+    _id: string;
+    role: 'resident' | 'worker' | 'manager';
+    name: string;
+    email: string;
 }
 
 interface ComplaintCreateData {
@@ -31,7 +38,100 @@ interface ComplaintUpdateData {
     assignedTo?: string;
 }
 
-async function cloudinaryFun(req: NextRequest) {
+
+
+
+// Helper function to verify JWT token
+const verifyToken = (request: NextRequest): JWTPayload | null => {
+    try {
+        const authHeader = request.headers.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return null;
+        }
+        const token = authHeader.substring(7);
+        return jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+    } catch (error) {
+        console.error('Token verification failed:', error);
+        return null;
+    }
+};
+
+// GET - Fetch complaints based on user role
+export async function GET(request: NextRequest) {
+    try {
+        // Verify authentication
+        const decoded = verifyToken(request);
+        if (!decoded) {
+            return NextResponse.json(
+                { error: 'Unauthorized - Invalid or missing token' },
+                { status: 401 }
+            );
+        }
+
+        const user = {...decoded};
+
+        // Connect to database
+        await connectDB();
+
+        let complaints;
+
+        // Fetch complaints based on user role
+        // @ts-ignore
+        switch (user.role) {
+            case 'manager':
+                // Manager gets all complaints with full details
+                complaints = await Complaint.find({})
+                    .populate('createdBy', 'name email')
+                    .populate('assignedTo', 'name email')
+                    .sort({ createdAt: -1 });
+                break;
+
+            case 'resident':
+                // Resident gets only their complaints
+                // @ts-ignore
+                complaints = await Complaint.find({ createdBy: user._id })
+                    .populate('createdBy', 'name email')
+                    .populate('assignedTo', 'name email')
+                    .sort({ createdAt: -1 });
+                break;
+
+            case 'worker':
+                // Worker gets complaints assigned to them
+                // @ts-ignore
+                complaints = await Complaint.find({ assignedTo: user._id })
+                    .populate('createdBy', 'name email')
+                    .populate('assignedTo', 'name email')
+                    .sort({ createdAt: -1 });
+                break;
+
+            default:
+                return NextResponse.json(
+                    { error: 'Invalid user role' },
+                    { status: 403 }
+                );
+        }
+
+        console.log(complaints)
+
+        return NextResponse.json({
+            success: true,
+            complaints,
+            count: complaints.length,
+            // @ts-ignore
+            userRole: user.role
+        });
+
+    } catch (error) {
+        console.error('Error fetching complaints:', error);
+        return NextResponse.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+        );
+    }
+}
+
+// uses cloudinary to POST from /api/complaint/raise-complaint route
+export async function POST (req: NextRequest) {
     const formData = await req.formData();
 
     const title = formData.get('title') as string;
@@ -69,174 +169,6 @@ async function cloudinaryFun(req: NextRequest) {
 
         uploadStream.end(buffer);
     });
-}
-
-
-// Helper function to verify JWT token
-const verifyToken = (request: NextRequest): JWTPayload | null => {
-    try {
-        const authHeader = request.headers.get('authorization');
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return null;
-        }
-
-        const token = authHeader.substring(7);
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
-        return decoded;
-    } catch (error) {
-        console.error('Token verification failed:', error);
-        return null;
-    }
-};
-
-// GET - Fetch complaints based on user role
-export async function GET(request: NextRequest) {
-    try {
-        // Verify authentication
-        const decoded = verifyToken(request);
-        if (!decoded) {
-            return NextResponse.json(
-                { error: 'Unauthorized - Invalid or missing token' },
-                { status: 401 }
-            );
-        }
-
-        const { user } = decoded;
-
-        // Connect to database
-        await connectDB();
-
-        let complaints;
-
-        // Fetch complaints based on user role
-        switch (user.role) {
-            case 'manager':
-                // Manager gets all complaints with full details
-                complaints = await Complaint.find({})
-                    .populate('createdBy', 'name email')
-                    .populate('assignedTo', 'name email')
-                    .sort({ createdAt: -1 });
-                break;
-
-            case 'resident':
-                // Resident gets only their complaints
-                complaints = await Complaint.find({ createdBy: user._id })
-                    .populate('createdBy', 'name email')
-                    .populate('assignedTo', 'name email')
-                    .sort({ createdAt: -1 });
-                break;
-
-            case 'worker':
-                // Worker gets complaints assigned to them
-                complaints = await Complaint.find({ assignedTo: user._id })
-                    .populate('createdBy', 'name email')
-                    .populate('assignedTo', 'name email')
-                    .sort({ createdAt: -1 });
-                break;
-
-            default:
-                return NextResponse.json(
-                    { error: 'Invalid user role' },
-                    { status: 403 }
-                );
-        }
-
-        return NextResponse.json({
-            success: true,
-            complaints,
-            count: complaints.length,
-            userRole: user.role
-        });
-
-    } catch (error) {
-        console.error('Error fetching complaints:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
-    }
-}
-
-// POST - Create new complaint (residents only)
-export async function POST(request: NextRequest) {
-    try {
-
-        cloudinaryFun(request)
-
-        // Verify authentication
-        const decoded = verifyToken(request);
-        if (!decoded) {
-            return NextResponse.json(
-                { error: 'Unauthorized - Invalid or missing token' },
-                { status: 401 }
-            );
-        }
-
-        const { user } = decoded;
-
-        // Only residents can create complaints
-        if (user.role !== 'resident') {
-            return NextResponse.json(
-                { error: 'Only residents can create complaints' },
-                { status: 403 }
-            );
-        }
-
-        // Parse request body
-        const body: ComplaintCreateData = await request.json();
-        const { title, description, category, priority } = body;
-
-        // Validate required fields
-        if (!title || !description || !category) {
-            return NextResponse.json(
-                { error: 'Title, description, and category are required' },
-                { status: 400 }
-            );
-        }
-
-        // Validate priority
-        if (priority && !['low', 'medium', 'high'].includes(priority)) {
-            return NextResponse.json(
-                { error: 'Priority must be low, medium, or high' },
-                { status: 400 }
-            );
-        }
-
-        // Connect to database
-        await connectDB();
-
-        // Create new complaint
-        const newComplaint = new Complaint({
-            title: title.trim(),
-            description: description.trim(),
-            category: category.trim(),
-            priority: priority || 'medium',
-            status: 'pending',
-            createdBy: user._id,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        });
-
-        const savedComplaint = await newComplaint.save();
-
-        // Populate the created complaint
-        const populatedComplaint = await Complaint.findById(savedComplaint._id)
-            .populate('createdBy', 'name email')
-            .populate('assignedTo', 'name email');
-
-        return NextResponse.json({
-            success: true,
-            message: 'Complaint created successfully',
-            complaint: populatedComplaint
-        }, { status: 201 });
-
-    } catch (error) {
-        console.error('Error creating complaint:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
-    }
 }
 
 // PUT - Update complaint (role-based permissions)

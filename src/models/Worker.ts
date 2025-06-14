@@ -22,10 +22,6 @@ const workerSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
-    assignedComplaints: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Complaint'
-    },
     tokens: {
         type: Number,
         default: 0
