@@ -6,7 +6,7 @@ import Complaint from '@/models/Complaint'
 export async function GET(req: Request, { params }: { params: { complaintId: string } }) {
     try {
         await connectDB()
-        const complaint = await Complaint.findById(await params.complaintId)
+        const complaint = await Complaint.findById((await params).complaintId)
 
         if (!complaint) {
             return NextResponse.json({ error: 'Complaint not found' }, { status: 404 })
@@ -24,7 +24,7 @@ export async function PUT(req: Request, { params }: { params: { complaintId: str
         await connectDB()
         const body = await req.json()
 
-        const updatedComplaint = await Complaint.findByIdAndUpdate(await (params.complaintId), body, {
+        const updatedComplaint = await Complaint.findByIdAndUpdate((await params).complaintId, body, {
             new: true,
             runValidators: true,
         })
@@ -43,7 +43,7 @@ export async function PUT(req: Request, { params }: { params: { complaintId: str
 export async function DELETE(req: Request, { params }: { params: { complaintId: string } }) {
     try {
         await connectDB()
-        const deleted = await Complaint.findByIdAndDelete(await params.complaintId)
+        const deleted = await Complaint.findByIdAndDelete((await params).complaintId)
 
         if (!deleted) {
             return NextResponse.json({ error: 'Complaint not found' }, { status: 404 })

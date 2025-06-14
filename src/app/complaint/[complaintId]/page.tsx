@@ -55,6 +55,8 @@ const getCurrentUserId = async (): Promise<string> => {
 }
 
 
+
+
 export default function ComplaintPage({ params }: Props) {
     const router = useRouter()
     const [complaint, setComplaint] = useState<Complaint | null>(null)
@@ -65,8 +67,8 @@ export default function ComplaintPage({ params }: Props) {
     const [userRole, setUserRole] = useState<"resident" | "manager" | "worker">("resident")
     const [userId, setUserId] = useState<string>('')
 
-    const { complaintId } = params
 
+    const { complaintId } = params
 
 
 // Fetch complaint and workers on mount
@@ -139,14 +141,14 @@ export default function ComplaintPage({ params }: Props) {
             })
 
             if (!res.ok) throw new Error('Failed to assign complaint')
-            alert('Complaint assigned successfully!')
+            toast.success('Complaint assigned successfully!')
 
             // Refresh complaint data
             const updatedRes = await fetch(`/api/complaint/${complaintId}`)
             const updatedData = await updatedRes.json()
             setComplaint(updatedData)
         } catch (err: any) {
-            alert(err.message)
+            toast.error('Unable to assign complaint!')
         }
     }
 
