@@ -1,8 +1,13 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import {use, useEffect, useState} from 'react'
 import toast from "react-hot-toast";
+
+interface created_by {
+    _id: string;
+    name: string
+}
 
 interface Complaint {
     _id: string
@@ -14,7 +19,8 @@ interface Complaint {
     assignedTo: string,
     status: string,
     qrCode: string,
-    priority: string
+    priority: string,
+    createdBy: created_by
 }
 
 interface Worker {
@@ -55,8 +61,6 @@ const getCurrentUserId = async (): Promise<string> => {
 }
 
 
-
-
 export default function ComplaintPage({ params }: Props) {
     const router = useRouter()
     const [complaint, setComplaint] = useState<Complaint | null>(null)
@@ -67,9 +71,8 @@ export default function ComplaintPage({ params }: Props) {
     const [userRole, setUserRole] = useState<"resident" | "manager" | "worker">("resident")
     const [userId, setUserId] = useState<string>('')
 
-
-    const { complaintId } = params
-
+    // @ts-ignore
+    const {complaintId} = use(params)
 
 // Fetch complaint and workers on mount
     useEffect(() => {
@@ -229,6 +232,8 @@ export default function ComplaintPage({ params }: Props) {
     if (loading) return <div className="p-6">Loading...</div>
     if (error) return <div className="p-6 text-red-600">Error: {error}</div>
 
+    console.log(complaint)
+
     return (
         <div className="p-6 max-w-4xl mx-auto">
             <div className="bg-white rounded-lg shadow-md p-6">
@@ -237,7 +242,7 @@ export default function ComplaintPage({ params }: Props) {
                         Complaint #{complaint?.complaintNumber}
                     </h1>
                     <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <span>Role: {userRole}</span>
+                        <span>Created By: {complaint?.createdBy?.name}</span>
                         <span>Status: {complaint?.status}</span>
                         <span>Priority: {complaint?.priority}</span>
                     </div>

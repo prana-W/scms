@@ -33,13 +33,11 @@ interface Complaint {
 type FilterType =
     'all'
     | 'recent'
-    | 'open'
-    | 'pending'
+    | 'submitted'
+    | 'assigned'
     | 'in-progress'
     | 'resolved'
-    | 'high-priority'
-    | 'assigned'
-    | 'unassigned';
+    | 'high-priority';
 type SortType = 'newest' | 'oldest' | 'priority' | 'status';
 
 const ComplaintPage = () => {
@@ -54,8 +52,7 @@ const ComplaintPage = () => {
     const router = useRouter();
 
     const getCookie = (name: string): string | null => {
-        if (typeof window === 'undefined') return null; // SSR safety
-
+        if (typeof window === 'undefined') return null;
         const cookieString = document.cookie;
         const cookies = cookieString.split('; '); // safer with space after ;
 
@@ -77,7 +74,6 @@ const ComplaintPage = () => {
                 return null;
             }
 
-            // Decode JWT token (simple base64 decode for payload)
             const payload = JSON.parse(atob(token.split('.')[1]));
             return payload;
         } catch (error) {
@@ -120,7 +116,8 @@ const ComplaintPage = () => {
                 case 'worker':
                     // Worker gets complaints assigned to them
                     filteredComplaints = data.complaints.filter(
-                        (complaint: Complaint) => complaint?.assignedTo === userId
+                        //@ts-ignore
+                        (complaint: Complaint) => complaint?.assignedTo?._id === userId
                     );
                     break;
                 default:
@@ -166,14 +163,6 @@ const ComplaintPage = () => {
                     (complaint) => new Date(complaint.createdAt) >= sevenDaysAgo
                 );
                 break;
-            case 'open':
-                filtered = filtered.filter(
-                    (complaint) => complaint.status === 'pending' || complaint.status === 'in-progress'
-                );
-                break;
-            case 'pending':
-                filtered = filtered.filter((complaint) => complaint.status === 'pending');
-                break;
             case 'in-progress':
                 filtered = filtered.filter((complaint) => complaint.status === 'in-progress');
                 break;
@@ -185,9 +174,6 @@ const ComplaintPage = () => {
                 break;
             case 'assigned':
                 filtered = filtered.filter((complaint) => complaint.assignedTo);
-                break;
-            case 'unassigned':
-                filtered = filtered.filter((complaint) => !complaint.assignedTo);
                 break;
             case 'all':
             default:
@@ -347,6 +333,7 @@ const ComplaintPage = () => {
         );
     }
 
+
     return (
         <div className="min-h-screen bg-gray-50 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -501,8 +488,8 @@ const ComplaintPage = () => {
                                             </div>
                                             {complaint.assignedTo && (
                                                 <div>
-                                                    <span
-                                                        className="font-medium">Assigned to:</span> {complaint.assignedTo.name}
+                                                    {/* @ts-ignore */}
+                                                    <span className="font-medium">Assigned to:</span> {complaint.assignedTo?.name}
                                                 </div>
                                             )}
                                         </div>

@@ -123,9 +123,6 @@ export async function GET(request: NextRequest) {
             })
         )
 
-
-        console.log(complaints)
-
         return NextResponse.json({
             success: true,
             complaints,

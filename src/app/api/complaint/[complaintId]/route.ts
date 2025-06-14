@@ -1,18 +1,27 @@
 import { NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Complaint from '@/models/Complaint'
+import { Resident } from '@/models'
 
 // GET: Fetch a single complaint by ID
 export async function GET(req: Request, { params }: { params: { complaintId: string } }) {
     try {
         await connectDB()
-        const complaint = await Complaint.findById((await params).complaintId)
+        let complaint = await Complaint.findById((await params).complaintId)
+
+        const resident = await Resident.findById(complaint?.createdBy)
 
         if (!complaint) {
             return NextResponse.json({ error: 'Complaint not found' }, { status: 404 })
         }
 
-        return NextResponse.json(complaint)
+        return NextResponse.json({
+            ...complaint.toObject?.(),
+            createdBy: {
+                _id: resident?._id,
+                name: resident?.name
+            }
+        })
     } catch (error) {
         return NextResponse.json({ error: 'Failed to fetch complaint' }, { status: 500 })
     }
