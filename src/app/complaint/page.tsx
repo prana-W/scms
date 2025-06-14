@@ -11,6 +11,11 @@ interface User {
     phone: string
 }
 
+interface created_by {
+    _id: string;
+    name: string
+}
+
 interface Complaint {
     _id: string;
     title: string;
@@ -18,7 +23,7 @@ interface Complaint {
     status: 'pending' | 'in-progress' | 'resolved' | 'rejected';
     priority: 'low' | 'medium' | 'high';
     type: string;
-    createdBy: string;
+    createdBy: created_by;
     assignedTo?: string;
     createdAt: string;
     updatedAt: string;
@@ -109,7 +114,7 @@ const ComplaintPage = () => {
                 case 'resident':
                     // Resident gets only their complaints
                     filteredComplaints = data.complaints.filter(
-                        (complaint: Complaint) => complaint.createdBy === userId
+                        (complaint: Complaint) => complaint.createdBy._id === userId
                     );
                     break;
                 case 'worker':

@@ -4,6 +4,7 @@ import connectDB from '@/lib/mongodb';
 import Complaint from '@/models/Complaint';
 import Worker from '../../../models/Worker'
 import jwt from 'jsonwebtoken';
+import Resident from '../../../models/Resident'
 
 // Types
 interface JWTPayload {
@@ -37,9 +38,6 @@ interface ComplaintUpdateData {
     status?: 'pending' | 'in-progress' | 'resolved' | 'rejected';
     assignedTo?: string;
 }
-
-
-
 
 // Helper function to verify JWT token
 const verifyToken = (request: NextRequest): JWTPayload | null => {
@@ -110,6 +108,21 @@ export async function GET(request: NextRequest) {
                     { status: 403 }
                 );
         }
+
+        complaints = await Promise.all(
+            complaints.map(async (complaint) => {
+                const resident = await Resident.findById(complaint.createdBy)
+
+                return {
+                    ...complaint.toObject?.(),
+                    createdBy: {
+                        _id: complaint.createdBy,
+                        name: resident?.name || 'Unknown'
+                    }
+                }
+            })
+        )
+
 
         console.log(complaints)
 
