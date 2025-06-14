@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import Complaint from '@/models/Complaint';
 import connectDB from '@/lib/mongodb';
-import getUserFromToken from '@/lib/auth';
 
 export async function POST(req: Request) {
 
