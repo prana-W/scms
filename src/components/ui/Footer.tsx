@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Linkedin, Github, Mail } from 'lucide-react';
+import { Twitter, Linkedin, Github} from 'lucide-react';
 
 const Footer = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -46,20 +46,12 @@ const Footer = () => {
             icon: Twitter,
             url: 'https://twitter.com/prana_W_',
             color: 'hover:text-blue-400'
-        },
-        {
-            name: 'Email',
-            icon: Mail,
-            url: 'pramadhu.kumar@gmail.com',
-            color: 'hover:text-green-600'
         }
     ];
 
     const importantLinks = [
-        { name: 'Privacy Policy', href: '/privacy' },
-        { name: 'Terms of Service', href: '/terms' },
-        { name: 'Support', href: '/support' },
-        { name: 'FAQ', href: '/faq' },
+        {name: 'Repository', href: 'https://github.com/prana-W/scms'},
+        {name: 'About Us', href: '/about'},
         { name: 'Contact Us', href: '/contact' }
     ];
 
