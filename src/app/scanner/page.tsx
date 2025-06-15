@@ -123,10 +123,10 @@ const ScanPage = () => {
             {qrData && (
                 <div className="mt-4 p-3 border rounded bg-gray-100 flex flex-col items-center">
                     <Link
-                        href="/complaint"
-                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors duration-200 shadow"
+                        href="/"
+                        className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                     >
-                        Go back to Complaint Section
+                        Go back to Dashboard
                     </Link>
                 </div>
             )}

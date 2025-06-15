@@ -214,11 +214,6 @@ const ComplaintPage = () => {
                 count: complaints.filter(c => c.status === 'submitted').length
             },
             {
-                key: 'assigned' as FilterType,
-                label: 'Assigned',
-                count: complaints.filter(c => c.status === 'assigned').length
-            },
-            {
                 key: 'high-priority' as FilterType,
                 label: 'High Priority',
                 count: complaints.filter(c => c.priority === 'high').length
@@ -226,7 +221,7 @@ const ComplaintPage = () => {
         ];
 
         // Add role-specific filters
-        if (user?.role === 'manager') {
+        if (user?.role === 'manager' || user?.role === 'resident') {
             baseFilters.push(
                 {key: 'assigned' as FilterType, label: 'Assigned', count: complaints.filter(c => c.assignedTo).length},
                 {
