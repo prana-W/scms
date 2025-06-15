@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import jsQR from 'jsqr';
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const ScanPage = () => {
     const [qrData, setQrData] = useState<string | null>(null);
@@ -120,8 +121,13 @@ const ScanPage = () => {
             )}
 
             {qrData && (
-                <div className="mt-4 p-3 border rounded bg-gray-100">
-                    <p className="font-semibold">Complaint was marked as resolved!</p>
+                <div className="mt-4 p-3 border rounded bg-gray-100 flex flex-col items-center">
+                    <Link
+                        href="/complaint"
+                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors duration-200 shadow"
+                    >
+                        Go back to Complaint Section
+                    </Link>
                 </div>
             )}
         </div>

@@ -20,7 +20,7 @@ interface Complaint {
     _id: string;
     title: string;
     description: string;
-    status: 'pending' | 'in-progress' | 'resolved' | 'rejected';
+    status: 'submitted' | 'assigned' | 'in-progress' | 'resolved';
     priority: 'low' | 'medium' | 'high';
     type: string;
     createdBy: created_by;
@@ -35,7 +35,6 @@ type FilterType =
     | 'recent'
     | 'submitted'
     | 'assigned'
-    | 'in-progress'
     | 'resolved'
     | 'high-priority';
 type SortType = 'newest' | 'oldest' | 'priority' | 'status';
@@ -163,12 +162,6 @@ const ComplaintPage = () => {
                     (complaint) => new Date(complaint.createdAt) >= sevenDaysAgo
                 );
                 break;
-            case 'in-progress':
-                filtered = filtered.filter((complaint) => complaint.status === 'in-progress');
-                break;
-            case 'resolved':
-                filtered = filtered.filter((complaint) => complaint.status === 'resolved');
-                break;
             case 'high-priority':
                 filtered = filtered.filter((complaint) => complaint.priority === 'high');
                 break;
@@ -194,6 +187,7 @@ const ComplaintPage = () => {
                 break;
             case 'status':
                 const statusOrder = {pending: 4, 'in-progress': 3, resolved: 2, rejected: 1};
+                // @ts-ignore
                 filtered.sort((a, b) => statusOrder[b.status] - statusOrder[a.status]);
                 break;
             default:
@@ -217,22 +211,12 @@ const ComplaintPage = () => {
             {
                 key: 'open' as FilterType,
                 label: 'Open',
-                count: complaints.filter(c => c.status === 'pending' || c.status === 'in-progress').length
+                count: complaints.filter(c => c.status === 'submitted').length
             },
             {
-                key: 'pending' as FilterType,
-                label: 'Pending',
-                count: complaints.filter(c => c.status === 'pending').length
-            },
-            {
-                key: 'in-progress' as FilterType,
-                label: 'In Progress',
-                count: complaints.filter(c => c.status === 'in-progress').length
-            },
-            {
-                key: 'resolved' as FilterType,
-                label: 'Resolved',
-                count: complaints.filter(c => c.status === 'resolved').length
+                key: 'assigned' as FilterType,
+                label: 'Assigned',
+                count: complaints.filter(c => c.status === 'assigned').length
             },
             {
                 key: 'high-priority' as FilterType,
@@ -259,10 +243,6 @@ const ComplaintPage = () => {
         switch (status) {
             case 'pending':
                 return 'bg-yellow-100 text-yellow-800';
-            case 'in-progress':
-                return 'bg-blue-100 text-blue-800';
-            case 'resolved':
-                return 'bg-green-100 text-green-800';
             case 'rejected':
                 return 'bg-red-100 text-red-800';
             default:

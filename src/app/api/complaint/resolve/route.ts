@@ -14,7 +14,7 @@ export async function POST(req: Request) {
         const complaint = await Complaint.findOne({ complaintNumber: code });
         if (!complaint) return NextResponse.json({ success: false, message: "Complaint not found" }, { status: 404 });
 
-        const timeTakenMs = Date.now() - new Date(complaint.updatedAt).getTime();
+        const timeTakenMs = Date.now() - new Date(complaint.createdAt).getTime();
         const timeTakenHr = timeTakenMs / (1000 * 60 * 60);
 
         let tokens = 10;
