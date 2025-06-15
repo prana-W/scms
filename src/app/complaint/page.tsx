@@ -209,11 +209,6 @@ const ComplaintPage = () => {
                 }).length
             },
             {
-                key: 'open' as FilterType,
-                label: 'Open',
-                count: complaints.filter(c => c.status === 'submitted').length
-            },
-            {
                 key: 'high-priority' as FilterType,
                 label: 'High Priority',
                 count: complaints.filter(c => c.priority === 'high').length
@@ -225,7 +220,7 @@ const ComplaintPage = () => {
             baseFilters.push(
                 {key: 'assigned' as FilterType, label: 'Assigned', count: complaints.filter(c => c.assignedTo).length},
                 {
-                    key: 'unassigned' as FilterType,
+                    key: 'submitted' as FilterType,
                     label: 'Unassigned',
                     count: complaints.filter(c => !c.assignedTo).length
                 }
